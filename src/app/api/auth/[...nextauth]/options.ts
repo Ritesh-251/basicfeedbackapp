@@ -3,6 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User.model"; 
 import bcrypt from "bcryptjs";
+import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
 
 export const authOptions: NextAuthOptions = {
     providers:[
@@ -22,7 +24,7 @@ export const authOptions: NextAuthOptions = {
                     if(!user){
                         throw new Error('No user found with this email')
                     }
-                    if(user.isVerified){
+                    if(!user.isVerified){
                         throw new Error('Please verify your account first')
                     }
                     const isPasswordCorrect = await bcrypt.compare(credentials.password,user.password);
@@ -39,8 +41,15 @@ export const authOptions: NextAuthOptions = {
                 }
             }
 
-            }) 
-    ],
+            }),GoogleProvider({
+                clientId: process.env.GOOGLE_CLIENT_ID!,
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+              }),
+              GitHubProvider({
+                clientId: process.env.GITHUB_CLIENT_ID!,
+                clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+              })
+            ],
     callbacks:{
             async jwt({ token, user }) {
             if (user) {

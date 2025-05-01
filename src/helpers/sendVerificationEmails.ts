@@ -10,6 +10,13 @@ export async function sendVerificationEmail(email:string,username:string,verifyC
             subject: 'Verification',
             react: VerificationEmail({username,otp:verifyCode}) 
           });
+          if (error) {
+            return {
+              success: false,
+              message: "Email sending failed: " + error.message
+            }
+          }
+          
         
           
         return {
