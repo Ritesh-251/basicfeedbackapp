@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config({ path: './src/lib/.env' });
 import mongoose from 'mongoose';
 
 type ConnectionObject = {
